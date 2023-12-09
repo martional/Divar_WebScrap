@@ -1,0 +1,7 @@
+username:1701844127_5e0de6af.csv:tehran-province:30:1402-09-15 10:00:56
+username:1701844345_2c9e422c.csv:alborz-province:30:1402-09-15 10:04:24
+username:1701853078_8f09e080.csv:tehran-province:30:1402-09-15 12:29:41
+username:1701864120_d0551a13.csv:gilan-province:6:1402-09-15 15:32:41
+username:1702097945_e69b6e47.csv:tehran-province:6:1402-09-18 08:29:25
+username:1702098581_2ce24597.csv:tehran-province:6:1402-09-18 08:40:51
+username:1702099558_10dbe559.csv:tehran-province:6:1402-09-18 08:56:35
