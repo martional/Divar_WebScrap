@@ -17,7 +17,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import uuid
 import threading
 import jdatetime
-import logging
+
 
 
 
@@ -26,6 +26,7 @@ import logging
 # save the urls of all advertisements
 # Web scrapper for infinite scrolling page #
 def save_urls(scroll_times, url_file, province_name,append,data_file,excel_file,username,try_num,expire_date):
+    print(6)
     home_url = 'https://divar.ir'
     cities = {
         'alborz-province': ["2","774","850","1720","1721","1722","1738","1739","1740","1751","1752","1753","1754"],
@@ -77,16 +78,16 @@ def save_urls(scroll_times, url_file, province_name,append,data_file,excel_file,
                     bar1.update(index_counter+1)
                     index_counter += 1
                 except:
-                    logging.exception("Exception occurred")
+                    #logging.exception("Exception occurred")
                     pass
                 
         else:
             print("Failed to retrieve data: Status code", res.status_code)
-            logging.warning("Failed to retrieve data: Status code", res.status_code)
+            #logging.warning("Failed to retrieve data: Status code", res.status_code)
             exit()
     except Exception as e:
         print("An error occurred:", e)
-        logging.exception("Exception occurred")
+        #logging.exception("Exception occurred")
         exit()
 
     # URL for subsequent POST requests
@@ -124,7 +125,7 @@ def save_urls(scroll_times, url_file, province_name,append,data_file,excel_file,
                         bar1.update(index_counter+1)
                         index_counter += 1
                     except:
-                        logging.exception("Exception occurred")
+                        #logging.exception("Exception occurred")
                         print("token is empty")
 
                     # Break if limit is reached
@@ -133,11 +134,11 @@ def save_urls(scroll_times, url_file, province_name,append,data_file,excel_file,
                     
             else:
                 print("Failed to retrieve data: Status code", res.status_code)
-                logging.warning("Failed to retrieve data: Status code", res.status_code)
+                #logging.warning("Failed to retrieve data: Status code", res.status_code)
                 time.sleep(5)
         except Exception as e:
             print("An error occurred during POST request:", e)
-            logging.exception("Exception occurred")
+            #logging.exception("Exception occurred")
             time.sleep(5)
         time.sleep(1)
 
@@ -149,7 +150,7 @@ def save_urls(scroll_times, url_file, province_name,append,data_file,excel_file,
             write_obj.writelines(url + '\n')'''
     bar1.finish()
     print("Data collection complete. Tokens written to tokens.txt")
-    logging.warning("Data collection complete. Tokens written to tokens.txt")
+    #logging.warning("Data collection complete. Tokens written to tokens.txt")
     scrap_links(append, url_file, data_file, username, excel_file,try_num,province_name)
 
 
@@ -161,7 +162,7 @@ def scrap_links(append=False, url_file="", data_file="", username="", excel_file
         
         print('------------------------------')
         print('Total link counts:',len(links))
-        logging.warning('Total link counts:',len(links))
+        #logging.warning('Total link counts:',len(links))
         # remove duplicates
         links =  list(set(links))
         print('Unique link counts:',len(links))
@@ -181,7 +182,7 @@ def scrap_links(append=False, url_file="", data_file="", username="", excel_file
     index_counter = 0
     
     print('Scraping links progress:')
-    logging.warning('Scraping links progress:')
+    #logging.warning('Scraping links progress:')
 
     
     bar1.start()
@@ -238,7 +239,7 @@ def scrap_links(append=False, url_file="", data_file="", username="", excel_file
 
                     if desired_section == None:
                         print ("failed")
-                        logging.warning("failed")
+                        #logging.warning("failed")
                         break                    
                     #balcony = desired_section['widgets'][7]['data']['action']['payload']['modal_page']['widget_list'][8][data]['disabled']
                     # Create a dictionary for each row
@@ -262,17 +263,17 @@ def scrap_links(append=False, url_file="", data_file="", username="", excel_file
 
                 except Exception as e:
                     print("An error occurred:", e)
-                    logging.exception("Exception occurred")
+                    #logging.exception("Exception occurred")
                     traceback.print_exc()
                     print(each_link)
                     
             else:
                 print("Failed to retrieve data: Status code", res.status_code)
-                logging.warning("Failed to retrieve data: Status code", res.status_code)
+                #logging.warning("Failed to retrieve data: Status code", res.status_code)
                 
         except Exception as e:
             print("An error occurred:", e)
-            logging.exception("Exception occurred")
+            #logging.exception("Exception occurred")
             if try_num:
                 time.sleep(5)
                 try_num = try_num - 1
@@ -461,7 +462,7 @@ def scrap(province_name='mazandaran-province', count=48,expire_date='۱ ساعت
     session['search_thread_1_count'] = 0
     session['search_thread_1_last_try'] = 0
     session['search_thread_1_permision'] = True
-
+    print(5)
 
     username = ''
     if 'username' in session:
@@ -539,7 +540,7 @@ def generate_html_table(username, filename):
 
 app = Flask(__name__, static_url_path='/static')
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
-logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+#logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
 
 # Configure a secret key (for session management and flash messages)
@@ -570,6 +571,7 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+        print(username)
         
         # Check if the provided credentials are valid
         if check_credentials(username, password):
@@ -586,9 +588,11 @@ def login():
 @app.route('/submit', methods=['POST'])
 def submit():
     # Get user input from the form
+    print(1)
     user_input = request.form.get('province')
     count = 30
     expire_date = request.form.get('expire')
+    print(2)
     if 'ساعت' in expire_date:
         count=30
     elif 'روز' in expire_date:
@@ -597,6 +601,7 @@ def submit():
         count=3000
     elif '۴' in expire_date:
         count=30000
+    print(3)
     scrap(user_input, count,expire_date)
 
     # Implement your Python code here
